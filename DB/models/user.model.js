@@ -32,7 +32,8 @@ const userSchema = new Schema({
     },
     status:{
         type:String,
-        enum:['active','not_active']
+        enum:['active','not_active'],
+        default:'active'
     },
     confirmEmail:{
         type:Boolean,
@@ -40,7 +41,8 @@ const userSchema = new Schema({
     },
     role:{
         type:String,
-        enum:['Admin','user']
+        enum:['Admin','user'],
+        default:'user'
     }
     
 },{timestamps:true});
