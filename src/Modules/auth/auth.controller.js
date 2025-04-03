@@ -1,5 +1,7 @@
 import userModel from '../../../DB/models/user.model.js';
 import bcrypt, { hash } from 'bcryptjs';
+import {sendEmail} from '../../utils/sendEmail.js';
+
 
 export const register = async(req,res,next)=>{
     const {userName,email,password} = req.body;
@@ -9,6 +11,7 @@ export const register = async(req,res,next)=>{
     }
     const hash = bcrypt.hashSync(password,parseInt(process.env.SALT_ROUND));
     const createUser = await userModel.create({userName,email,password:hash});
+    
     return res.status(201).json({message:"ok",createUser});
     
 };
