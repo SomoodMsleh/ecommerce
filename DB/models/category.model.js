@@ -1,4 +1,3 @@
-import { object } from "joi";
 import mongoose, { Schema,Types,model } from "mongoose";
 
 const categorySchema = new Schema({
@@ -18,7 +17,7 @@ const categorySchema = new Schema({
         default:'active'
     },
     image:{
-        type:object,
+        type:Object,
     },
     createdBy:{
         type:Types.ObjectId,
