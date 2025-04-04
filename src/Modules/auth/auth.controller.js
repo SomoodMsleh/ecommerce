@@ -41,3 +41,22 @@ export const confirmEmail = async(req,res,next)=>{
     return res.status(200).json({message:"successfully"});
 };
 
+export const login = async(req,res,next)=>{
+    const {email,password} = req.body;
+    const user = await userModel.findOne({email});
+    if(!user){
+        return res.status(400).json({message:"Invalid Data"});
+    }
+    if(!user.confirmEmail){
+        return res.status(400).json({message:"Plz confirm your email"});
+    }
+    if(user.status=='not_active'){
+        return res.status(400).json({message:"Your account is blocked"});
+    }
+    const check = bcrypt.compareSync(password,user.password);
+    if(!check){
+        return res.status(400).json({message:"Invalid Data"});
+    }
+    const token = jwt.sign({_id:user._id,userName:user.userName,email:user.email,role:user.role},process.env.LOGIN_SIGNAL);
+    return res.status(200).json({message:"successfully",token});
+};
