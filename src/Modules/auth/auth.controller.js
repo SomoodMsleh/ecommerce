@@ -2,6 +2,7 @@ import userModel from '../../../DB/models/user.model.js';
 import bcrypt, { hash } from 'bcryptjs';
 import {sendEmail} from '../../utils/sendEmail.js';
 import jwt from 'jsonwebtoken';
+import { nanoid ,customAlphabet} from 'nanoid';
 
 export const register = async(req,res,next)=>{
     const {userName,email,password} = req.body;
@@ -59,4 +60,26 @@ export const login = async(req,res,next)=>{
     }
     const token = jwt.sign({_id:user._id,userName:user.userName,email:user.email,role:user.role},process.env.LOGIN_SIGNAL);
     return res.status(200).json({message:"successfully",token});
+};
+
+
+export const sendCode = async(req,res,next)=>{
+    const {email} = req.body;
+    const code = customAlphabet('0123456789ABCDEFJHIGKLMNOPQRSTUVWXYZ',6)();
+    const user = await userModel.findOneAndUpdate({email},{sendCode:code});
+    if(!user){
+        return res.status(400).json({message:"Invalid Data"});
+    }
+    const html = `
+        <div style="font-family: Arial, sans-serif; padding: 16px;">
+            <h2>Reset Your Password</h2>
+            <p>Use the following verification code:</p>
+            <div style="font-size: 24px; font-weight: bold; color: #2c3e50;">${code}</div>
+            <p>This code is valid for the next 10 minutes.</p>
+            <p>If you didn't request this, ignore this email.</p>
+        </div>
+    `;
+    await sendEmail(email,"Reset Password",html);
+
+    return res.status(200).json({message:"successfully"});
 };
