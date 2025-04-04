@@ -83,3 +83,19 @@ export const sendCode = async(req,res,next)=>{
 
     return res.status(200).json({message:"successfully"});
 };
+
+export const resetPassword = async(req,res,next)=>{
+    const {email,code,password} = req.body;
+    const user = await userModel.findOne({email});
+    if(!user){
+        return res.status(400).json({message:"Invalid Data, not register account"});
+    }
+    if(user.sendCode != code){
+        return res.status(400).json({message:"Invalid Code"});
+    }
+    const hash = bcrypt.hashSync(password,parseInt(process.env.SALT_ROUND));
+    user.password = hash;
+    user.sendCode = null;
+    await user.save();
+    return res.status(200).json({message:"successfully"});
+};
