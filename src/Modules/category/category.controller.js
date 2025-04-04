@@ -8,3 +8,8 @@ export const createCategory = async (req,res,next)=>{
     const category = await categoryModel.create({name,slug,createdBy})
     return res.status(201).json({message:"successfully",category});
 };
+
+export const getAllCategory = async(req,res,next)=>{
+    const categories = await categoryModel.find();
+    return res.status(201).json({message:"successfully",categories});
+}
