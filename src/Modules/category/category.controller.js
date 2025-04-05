@@ -20,6 +20,15 @@ export const getAllCategory = async(req,res,next)=>{
     return res.status(200).json({message:"successfully",categories});
 };
 
+export const getDetailCategory = async (req,res,next)=>{
+    const {id} = req.params;
+    const category = await categoryModel.findById(id);
+    if(!category){
+        return res.status(404).json({message:"Category not found"});
+    }
+    return res.status(200).json({message:"successfully",category});
+
+};
 
 export const updateCategory = async (req,res,next)=>{
     const {id} = req.params;
