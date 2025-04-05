@@ -10,7 +10,12 @@ export const createCategory = async (req,res,next)=>{
     return res.status(201).json({message:"successfully",category});
 };
 
+export const getActiveCategory = async(req,res,next)=>{
+    const categories = await categoryModel.find({status:'active'});
+    return res.status(201).json({message:"successfully",categories});
+}
+
 export const getAllCategory = async(req,res,next)=>{
-    const categories = await categoryModel.find();
+    const categories = await categoryModel.find({});
     return res.status(201).json({message:"successfully",categories});
 }
