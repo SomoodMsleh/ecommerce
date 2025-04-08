@@ -12,13 +12,13 @@ export const createProduct = async(req,res,next)=>{
     req.body.slug = slugify(name);
     req.body.createdBy = req.userId;
     req.body.updateBy = req.userId; 
-    const {secure_url,public_id} = await cloudinary.uploader.upload(req.files.mainImage[0].path);
+    const {secure_url,public_id} = await cloudinary.uploader.upload(req.files.mainImage[0].path,{folder:`/${process.env.APP_NAME}/products/${name}`});
     req.body.mainImage = {secure_url,public_id};
     
     if(req.files.subImages){
         req.body.subImages = []
         for (const image of req.files.subImages){
-            const {secure_url,public_id} = await cloudinary.uploader.upload(image.path);
+            const {secure_url,public_id} = await cloudinary.uploader.upload(image.path,{folder:`/${process.env.APP_NAME}/products/${name}/subImages`});
             req.body.subImages.push({secure_url,public_id})
         }
     }
