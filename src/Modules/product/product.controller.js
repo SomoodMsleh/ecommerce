@@ -24,4 +24,15 @@ export const createProduct = async(req,res,next)=>{
     }
     const product = await productModel.create(req.body)   
     return res.status(201).json({message:"successfully",product});
+};
+
+export const getActiveProduct = async(req,res,next)=>{
+    const products = await productModel.find({status:'active'}).select(['name','price','mainImage']);
+    return res.status(201).json({message:"successfully",products});
+
+}
+
+export const getAllProduct = async(req,res,next)=>{
+    const products = await productModel.find({}).select(['name','price','mainImage']);
+    return res.status(201).json({message:"successfully",products});
 }
