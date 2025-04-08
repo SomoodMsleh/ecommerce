@@ -46,3 +46,22 @@ export const getDetailsProduct = async(req,res,next)=>{
     }
     return res.status(201).json({message:"successfully",product});
 };
+
+
+
+
+
+export const deleteProduct = async (req,res,next)=>{
+    const {id} = req.params;
+    const product = await productModel.findByIdAndDelete(id);
+    if(!product){
+        return res.status(404).json({message:"product not found"});
+    }
+    await cloudinary.uploader.destroy(product.mainImage.public_id);
+    if(product.subImages){
+        for(const image of product.subImages){
+            await cloudinary.uploader.destroy(image.public_id);
+        }
+    }
+    return res.status(201).json({message:"successfully",product});
+};
