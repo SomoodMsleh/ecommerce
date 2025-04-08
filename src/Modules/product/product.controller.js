@@ -28,13 +28,13 @@ export const createProduct = async(req,res,next)=>{
 
 export const getActiveProduct = async(req,res,next)=>{
     const products = await productModel.find({status:'active'}).select(['name','price','mainImage']);
-    return res.status(201).json({message:"successfully",products});
+    return res.status(200).json({message:"successfully",products});
 
 };
 
 export const getAllProduct = async(req,res,next)=>{
     const products = await productModel.find({}).select(['name','price','mainImage']);
-    return res.status(201).json({message:"successfully",products});
+    return res.status(200).json({message:"successfully",products});
 };
 
 
@@ -44,7 +44,7 @@ export const getDetailsProduct = async(req,res,next)=>{
     if(!product || product.status == 'not_active'){
         return res.status(404).json({message:"product not found"});
     }
-    return res.status(201).json({message:"successfully",product});
+    return res.status(200).json({message:"successfully",product});
 };
 
 
@@ -63,5 +63,5 @@ export const deleteProduct = async (req,res,next)=>{
             await cloudinary.uploader.destroy(image.public_id);
         }
     }
-    return res.status(201).json({message:"successfully",product});
+    return res.status(200).json({message:"successfully",product});
 };
