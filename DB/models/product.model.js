@@ -41,22 +41,24 @@ const productSchema = new Schema({
     subImages:[
         {
             type:Object,
-            required:true
         }
     ],
     categoryId:{
         type:Types.ObjectId,
-        ref:'Category'
+        ref:'Category',
+        required:true,
     },
     colors:[String],
     sizes:[String],
     createdBy:{
         type:Types.ObjectId,
         ref:'User',
+        required:true,
     },
     updateBy:{
         type:Types.ObjectId,
         ref:'User',
+        required:true,
     }
 },{timestamps:true});
 
