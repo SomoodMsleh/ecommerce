@@ -30,9 +30,19 @@ export const getActiveProduct = async(req,res,next)=>{
     const products = await productModel.find({status:'active'}).select(['name','price','mainImage']);
     return res.status(201).json({message:"successfully",products});
 
-}
+};
 
 export const getAllProduct = async(req,res,next)=>{
     const products = await productModel.find({}).select(['name','price','mainImage']);
     return res.status(201).json({message:"successfully",products});
-}
+};
+
+
+export const getDetailsProduct = async(req,res,next)=>{
+    const {id} = req.params;
+    const product = await productModel.findById(id).select(['name','price','mainImage','status']);
+    if(!product || product.status == 'not_active'){
+        return res.status(404).json({message:"product not found"});
+    }
+    return res.status(201).json({message:"successfully",product});
+};
