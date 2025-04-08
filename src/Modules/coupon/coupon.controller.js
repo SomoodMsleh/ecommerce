@@ -11,3 +11,8 @@ export const createCoupon = async (req,res,next)=>{
     const coupon = await couponModel.create(req.body);
     return res.status(201).json({message:"successfully",coupon});
 }
+
+export const getCoupon = async (req,res,next)=>{
+    const coupons = await couponModel.find().select(['name','amount','expireDate']);
+    return res.status(200).json({message:"successfully",coupons});
+}
