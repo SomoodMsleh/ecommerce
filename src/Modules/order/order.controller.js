@@ -2,6 +2,7 @@ import orderModel from "../../../DB/models/order.model.js";
 import cartModel from "../../../DB/models/cart.model.js";
 import couponModel from "../../../DB/models/coupon.model.js";
 import productModel from "../../../DB/models/product.model.js"
+import userModel from "../../../DB/models/user.model.js"
 
 export const createOrder = async (req,res)=>{
     const {couponName} = req.body; 
@@ -20,6 +21,8 @@ export const createOrder = async (req,res)=>{
         if(coupon.usedBy.includes(req.userId)){
             return res.status(400).json({message:"this coupon already used"});
         }
+    }else{
+        req.body.couponName = '';
     }
     const finalProducts = [];
     let subTotal = 0;
@@ -36,5 +39,17 @@ export const createOrder = async (req,res)=>{
         subTotal += product.finalPrice; 
         finalProducts.push(product);
     }
-    return res.status(201).json({message:"successfully",finalProducts});
+    const user = await userModel.findById(req.userId);
+    if(!req.body.address){
+        req.body.address = user.address;
+    }
+    if(!req.body.phone){
+        req.body.phone = user.phone;
+    }
+    req.body.products = finalProducts;
+    req.body.userId = req.userId;
+    req.body.finalPrice = subTotal;
+    const order = await orderModel.create(req.body);
+    return res.status(201).json({message:"successfully",order});
+
 };

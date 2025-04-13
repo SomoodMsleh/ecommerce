@@ -25,7 +25,7 @@ export const createProduct = async(req,res,next)=>{
     if(!discount){
         req.body.priceAfterDiscount = req.body.price;
     }else{
-        req.body.priceAfterDiscount =  req.body.price * discount;
+        req.body.priceAfterDiscount =  req.body.price - (req.body.price * (discount/100));
     }
     const product = await productModel.create(req.body)   
     return res.status(201).json({message:"successfully",product});

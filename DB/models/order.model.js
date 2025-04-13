@@ -66,7 +66,6 @@ const orderSchema = new Schema({
     updateBy:{
         type:Types.ObjectId,
         ref:'User',
-        required:true,
     }
 
 },{timestamps:true});
