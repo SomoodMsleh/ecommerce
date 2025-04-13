@@ -1,4 +1,4 @@
-import mongoose, { Schema,Types,model } from "mongoose";
+import  {mongoose, Schema,Types,model } from "mongoose";
 
 const orderSchema = new Schema({
     userId:{
@@ -43,6 +43,14 @@ const orderSchema = new Schema({
         type:String,
         default:"cash",
         enum:["cash","card"],
+    },
+    phone:{
+        type:String, 
+        required:true,
+    },
+    address:{
+        type:String, 
+        required:true,
     },
     status:{
         type:String,
