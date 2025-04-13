@@ -22,6 +22,7 @@ export const createOrder = async (req,res)=>{
         }
     }
     const finalProducts = [];
+    let subTotal = 0;
     for(let product of cart.products){
         const checkProduct = await productModel.findOne({_id:product.productId,stock:{$gte:product.quantity}});
         if(!checkProduct){
@@ -30,8 +31,10 @@ export const createOrder = async (req,res)=>{
         // convert product from BSON to JSON used toObject()
         product = product.toObject();
         product.productName = checkProduct.name;
-        product.unitPrice = checkProduct.price;
-        return res.status(201).json({message:"successfully",product});
+        product.unitPrice = checkProduct.priceAfterDiscount;
+        product.finalPrice = product.unitPrice * product.quantity;
+        subTotal += product.finalPrice; 
+        finalProducts.push(product);
     }
-    return res.status(201).json({message:"successfully",cart});
+    return res.status(201).json({message:"successfully",finalProducts});
 };

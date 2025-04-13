@@ -4,7 +4,7 @@ import cloudinary from '../../utils/cloudinary.js';
 import categoryModel from '../../../DB/models/category.model.js';
 export const createProduct = async(req,res,next)=>{
     
-    const {name,categoryId} = req.body;
+    const {name,categoryId,discount} = req.body;
     const checkCategory =  await categoryModel.findById(categoryId);
     if(!checkCategory){
         return res.status(404).json({message:"Category not found"});
@@ -21,6 +21,11 @@ export const createProduct = async(req,res,next)=>{
             const {secure_url,public_id} = await cloudinary.uploader.upload(image.path,{folder:`/${process.env.APP_NAME}/products/${name}/subImages`});
             req.body.subImages.push({secure_url,public_id})
         }
+    }
+    if(!discount){
+        req.body.priceAfterDiscount = req.body.price;
+    }else{
+        req.body.priceAfterDiscount =  req.body.price * discount;
     }
     const product = await productModel.create(req.body)   
     return res.status(201).json({message:"successfully",product});
