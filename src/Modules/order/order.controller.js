@@ -4,7 +4,7 @@ import couponModel from "../../../DB/models/coupon.model.js";
 import productModel from "../../../DB/models/product.model.js"
 import userModel from "../../../DB/models/user.model.js"
 
-export const createOrder = async (req,res)=>{
+export const createOrder = async (req,res,next)=>{
     const {couponName} = req.body; 
     const cart = await cartModel.findOne({userId:req.userId});
     if(!cart){
@@ -50,6 +50,7 @@ export const createOrder = async (req,res)=>{
     req.body.userId = req.userId;
     req.body.finalPrice = subTotal;
     const order = await orderModel.create(req.body);
+    
     return res.status(201).json({message:"successfully",order});
 
 };
