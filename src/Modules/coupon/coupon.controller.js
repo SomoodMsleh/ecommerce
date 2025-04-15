@@ -1,9 +1,11 @@
 import couponModel from '../../../DB/models/coupon.model.js';
+import { AppError } from "../../utils/AppError.js";
+
 
 export const createCoupon = async (req,res,next)=>{
 
     if(await couponModel.findOne({name:req.body.name})){
-        return res.status(409).json({message:"coupon name is already exists"});
+        return next(new AppError("coupon name is already exists",409));
     }
     req.body.createdBy = req.userId;
     req.body.updateBy = req.userId;

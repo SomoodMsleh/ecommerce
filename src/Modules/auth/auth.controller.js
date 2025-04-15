@@ -3,12 +3,14 @@ import bcrypt, { hash } from 'bcryptjs';
 import {sendEmail} from '../../utils/sendEmail.js';
 import jwt from 'jsonwebtoken';
 import { nanoid ,customAlphabet} from 'nanoid';
+import { AppError } from "../../utils/AppError.js";
+
 
 export const register = async(req,res,next)=>{
     const {userName,email,password} = req.body;
     const user = await userModel.findOne({email:email});
     if(user){
-        return res.status(400).json({message:"email already exist"});
+        return next(new AppError("email already exist",400));
     }
     const hash = bcrypt.hashSync(password,parseInt(process.env.SALT_ROUND));
     const createUser = await userModel.create({userName,email,password:hash});
@@ -46,17 +48,17 @@ export const login = async(req,res,next)=>{
     const {email,password} = req.body;
     const user = await userModel.findOne({email});
     if(!user){
-        return res.status(400).json({message:"Invalid Data"});
+        return next(new AppError("Invalid Data",400));   
     }
     if(!user.confirmEmail){
-        return res.status(400).json({message:"Plz confirm your email"});
+        return next(new AppError("Plz confirm your email",400));
     }
     if(user.status=='not_active'){
-        return res.status(400).json({message:"Your account is blocked"});
+        return next(new AppError("Your account is blocked",400));
     }
     const check = bcrypt.compareSync(password,user.password);
     if(!check){
-        return res.status(400).json({message:"Invalid Data"});
+        return next(new AppError("Invalid Data",400));
     }
     const token = jwt.sign({_id:user._id,userName:user.userName,email:user.email,role:user.role},process.env.LOGIN_SIGNAL);
     return res.status(200).json({message:"successfully",token});
@@ -68,7 +70,7 @@ export const sendCode = async(req,res,next)=>{
     const code = customAlphabet('0123456789ABCDEFJHIGKLMNOPQRSTUVWXYZ',6)();
     const user = await userModel.findOneAndUpdate({email},{sendCode:code});
     if(!user){
-        return res.status(400).json({message:"Invalid Data"});
+        return next(new AppError("Invalid Data",400));
     }
     const html = `
         <div style="font-family: Arial, sans-serif; padding: 16px;">
@@ -88,10 +90,10 @@ export const resetPassword = async(req,res,next)=>{
     const {email,code,password} = req.body;
     const user = await userModel.findOne({email});
     if(!user){
-        return res.status(400).json({message:"Invalid Data, not register account"});
+        return next(new AppError("Invalid Data, not register account",400));
     }
     if(user.sendCode != code){
-        return res.status(400).json({message:"Invalid Code"});
+        return next(new AppError("Invalid Code",400));
     }
     const hash = bcrypt.hashSync(password,parseInt(process.env.SALT_ROUND));
     user.password = hash;

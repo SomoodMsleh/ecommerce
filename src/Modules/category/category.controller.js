@@ -1,5 +1,7 @@
 import categoryModel from '../../../DB/models/category.model.js';
 import slugify from 'slugify';
+import { AppError } from "../../utils/AppError.js";
+
 
 export const createCategory = async (req,res,next)=>{
     const {name} = req.body;
@@ -24,7 +26,7 @@ export const getDetailCategory = async (req,res,next)=>{
     const {id} = req.params;
     const category = await categoryModel.findById(id);
     if(!category){
-        return res.status(404).json({message:"Category not found"});
+        return next(new AppError("Category not found",404));
     }
     return res.status(200).json({message:"successfully",category});
 
@@ -36,7 +38,7 @@ export const updateCategory = async (req,res,next)=>{
     const userId = req.userId;
     const category = await categoryModel.findById(id);
     if(!category){
-        return res.status(404).json({message:"Category not found"});
+        return next(new AppError("Category not found",404));
     }
     category.name = name;
     category.slug = slugify(name);
@@ -50,7 +52,7 @@ export const deleteCategory = async(req,res,next)=>{
     const {id} = req.params;
     const category = await categoryModel.findByIdAndDelete(id);
     if(!category){
-        return res.status(404).json({message:"Category not found"});
+        return next(new AppError("Category not found",404));
     }
     return res.status(200).json({message:"successfully"});
 

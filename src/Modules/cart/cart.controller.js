@@ -1,5 +1,6 @@
 import cartModel from "../../../DB/models/cart.model.js";
 import productModel from "../../../DB/models/product.model.js";
+import { AppError } from "../../utils/AppError.js";
 
 export const createCart = async (req,res,next)=>{
     const {productId} = req.body;
@@ -7,7 +8,6 @@ export const createCart = async (req,res,next)=>{
     if(!cart){
         const newCart =await cartModel.create({userId:req.userId,products:{productId}});
         return res.status(201).json({message:"successfully",newCart});
-
     }
     for (const product of cart.products){
         if(product.productId == productId){
