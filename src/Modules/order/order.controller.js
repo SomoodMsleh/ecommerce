@@ -63,8 +63,13 @@ export const createOrder = async (req,res,next)=>{
 
 };
 
+export const getOrdersByStatus = async (req,res,next)=>{
+    const {status} = req.params;
+    const orders = await orderModel.find({status:status});
+    return res.status(201).json({message:"successfully",orders});
+};
 export const getAllOrders = async (req,res,next)=>{
-    const orders = await orderModel.find();
+    const orders = await orderModel.find({});
     return res.status(201).json({message:"successfully",orders});
 };
 export const getUserOrders = async (req,res,next)=>{
