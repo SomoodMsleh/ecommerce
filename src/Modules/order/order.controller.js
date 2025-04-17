@@ -50,7 +50,7 @@ export const createOrder = async (req,res,next)=>{
     }
     req.body.products = finalProducts;
     req.body.userId = req.userId;
-    req.body.finalPrice = subTotal;
+    req.body.finalPrice = subTotal - (subTotal* ((req.body.coupon.amount|| 0)/100) );
     const order = await orderModel.create(req.body);
     for(const product of cart.products){
         await productModel.updateOne({_id:product.productId},{$inc:{stock:-product.quantity}})
