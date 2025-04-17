@@ -22,6 +22,7 @@ export const createOrder = async (req,res,next)=>{
         if(coupon.usedBy.includes(req.userId)){
             return next(new AppError("this coupon already used",400));
         }
+        req.body.coupon = coupon;
     }else{
         req.body.couponName = '';
     }
@@ -53,6 +54,9 @@ export const createOrder = async (req,res,next)=>{
     const order = await orderModel.create(req.body);
     for(const product of cart.products){
         await productModel.updateOne({_id:product.productId},{$inc:{stock:-product.quantity}})
+    }
+    if(req.body.coupon){
+        await couponModel.updateOne({_id:req.body.coupon._id},{$addToSet:{usedBy:req.userId}})
     }
     return res.status(201).json({message:"successfully",order});
 
