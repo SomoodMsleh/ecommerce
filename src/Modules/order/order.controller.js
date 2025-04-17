@@ -58,6 +58,7 @@ export const createOrder = async (req,res,next)=>{
     if(req.body.coupon){
         await couponModel.updateOne({_id:req.body.coupon._id},{$addToSet:{usedBy:req.userId}})
     }
+    await cartModel.updateOne({userId:req.userId},{products:[]})
     return res.status(201).json({message:"successfully",order});
 
 };
