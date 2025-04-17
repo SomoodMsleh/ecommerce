@@ -79,3 +79,15 @@ export const getUserOrders = async (req,res,next)=>{
 export const getOrderDetails = async (req,res,next)=>{
     
 };
+
+export const changeStatusOrders = async (req,res,next)=>{
+    const {id} = req.params;
+    const order = await orderModel.findById(id);
+    if(!order){
+        return next(new AppError("Order not found",404));
+    }
+    order.status = req.body.status;
+    order.updateBy = req.userId;
+    await order.save();
+    return res.status(201).json({message:"successfully",order});
+};
