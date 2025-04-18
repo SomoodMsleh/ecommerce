@@ -28,7 +28,7 @@ export const register = async(req,res,next)=>{
         </div>
         <p style="font-size: 14px; color: #777;">If you did not create this account, you can ignore this email.</p>
         <p style="font-size: 14px; color: #777;">Best regards,<br><strong>Tshop Team</strong></p>
-    </div>`;
+        </div>`;
 
     await sendEmail(email,'Confirm Email',html);
 

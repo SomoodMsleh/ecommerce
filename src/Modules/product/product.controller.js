@@ -54,10 +54,6 @@ export const getDetailsProduct = async(req,res,next)=>{
     return res.status(200).json({message:"successfully",product});
 };
 
-
-
-
-
 export const deleteProduct = async (req,res,next)=>{
     const {id} = req.params;
     const product = await productModel.findByIdAndDelete(id);

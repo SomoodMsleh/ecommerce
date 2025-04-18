@@ -7,5 +7,5 @@ const port = process.env.PORT || 3000;
 
 initApp(app,express);
 app.listen(port,()=>{
-    console.log(`server is running in port ${port} ....`);
+    console.log(`server is running on http://localhost:${port} ....`);
 })
